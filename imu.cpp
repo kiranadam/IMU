@@ -18,7 +18,6 @@ using Eigen::VectorXf;
 using Eigen::Vector3f;
 using Eigen::Quaternionf;
 using std::vector;
-
 		
 //function defination to get the matrix of raw data from CSV file
 vector<Quaternionf> raw_data(string filename);
@@ -43,7 +42,6 @@ bool ZVI(Quaternionf accel, Quaternionf gyro);
 
 // initializer 
 void initialize();
-
 
 
 // some global variables 
@@ -106,7 +104,6 @@ int main(int , char**)
 	// initialization with the values of the system to be checked with
 	initialize();
 
-
 	// writing the outputs in the file systems
 	ofstream state;
 	ofstream measure;
@@ -146,22 +143,18 @@ int main(int , char**)
 		if(ZVI(acce_list[i], gyro_list[i]) == true)
 		{
 			KF_correction(xkk_1, Pkk_1, z, xkk, Pkk);
-
-
+			
 			// writing state x,y,z in the file state.csv
 			dx = xkk(0);
 			dy = xkk(1);
 			dz = xkk(2);
-			state << dx <<", "<<dy<<", "<<dx<<endl;
-			
+			state << dx <<", "<<dy<<", "<<dz<<endl;
 			
 			// writing state x,y,z in the file pose.csv
 			dx = xkk(6)*deltaT;
 			dy = xkk(7)*deltaT;
 			dz = xkk(8)*deltaT;
-			pose << dx <<", "<<dy<<", "<<dx<<endl;
-
-			
+			pose << dx <<", "<<dy<<", "<<dz<<endl;
 
 		}
 		else
@@ -174,13 +167,13 @@ int main(int , char**)
 			dx = xkk(0);
 			dy = xkk(1);
 			dz = xkk(2);
-			state << dx <<", "<<dy<<", "<<dx<<endl;
+			state << dx <<", "<<dy<<", "<<dz<<endl;
 			
 			// writing state x,y,z in the file pose.csv
 			dx = xkk(6)*deltaT;
 			dy = xkk(7)*deltaT;
 			dz = xkk(8)*deltaT;
-			pose << dx <<", "<<dy<<", "<<dx<<endl;	
+			pose << dx <<", "<<dy<<", "<<dz<<endl;	
 		}
 	}
 	state.close();
@@ -235,7 +228,6 @@ vector<Quaternionf> raw_data(string filename)
 	return vec;
 }
 
-
 // Quaternion multiplication of two quaternions
 Quaternionf quatMult(Quaternionf& q1, Quaternionf& q2) 
 {
@@ -272,7 +264,6 @@ void KF_prediction(VectorXf& xkk_1, MatrixXf& Pkk_1, VectorXf u, VectorXf& xkk, 
 	G << Matrix3f::Zero(), Matrix3f::Zero(),
              q.toRotationMatrix()*deltaT, Matrix3f::Zero(),
 	     Matrix3f::Zero(), q.toRotationMatrix();
-
 
 	// kalman state and covariance prediction
 	xkk_1 = F*xkk + G*u;
